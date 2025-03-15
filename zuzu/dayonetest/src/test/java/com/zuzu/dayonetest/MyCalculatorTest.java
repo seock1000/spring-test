@@ -1,5 +1,6 @@
 package com.zuzu.dayonetest;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -7,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class MyCalculatorTest {
 
     @Test
+    @DisplayName("MyCalculator 덧셈 테스트")
     void add() {
         // AAA 패턴
 
@@ -21,6 +23,7 @@ class MyCalculatorTest {
     }
 
     @Test
+    @DisplayName("MyCalculator 뺄셈 테스트")
     void minus() {
         //GWT 패턴
 
@@ -35,6 +38,7 @@ class MyCalculatorTest {
     }
 
     @Test
+    @DisplayName("MyCalculator 나눗셈 테스트")
     void divide() {
         MyCalculator calculator = new MyCalculator(10.0);
 
@@ -44,6 +48,7 @@ class MyCalculatorTest {
     }
 
     @Test
+    @DisplayName("MyCalculator 곱셈 테스트")
     void multiply() {
         MyCalculator calculator = new MyCalculator(2.0);
 
@@ -53,6 +58,7 @@ class MyCalculatorTest {
     }
 
     @Test
+    @DisplayName("MyCalculator 사칙연산 테스트")
     void complicatedCalculateTest() {
         //given
         MyCalculator calculator = new MyCalculator(0.0);
@@ -70,6 +76,7 @@ class MyCalculatorTest {
     }
 
     @Test
+    @DisplayName("0으로 나누었을 때는 ZeroDivisionException을 발생시켜야 합니다.")
     void divideWithZero() {
 
         //given

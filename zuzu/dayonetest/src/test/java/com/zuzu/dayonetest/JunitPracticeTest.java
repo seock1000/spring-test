@@ -1,13 +1,15 @@
 package com.zuzu.dayonetest;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.List;
 
+// DisplayNameGenerator.ReplaceUnderscores.class : under bar를 공백으로 변환
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 public class JunitPracticeTest {
 
     @Test
+    @DisplayName("Assert Equals 메소드 테스트")
     public void assertEqualsTest() {
         String expected = "Something";
         String actual = "Something";
@@ -16,6 +18,7 @@ public class JunitPracticeTest {
     }
 
     @Test
+    @DisplayName("Assert Not Equals 메소드 테스트")
     public void assertNotEqualsTest() {
         String expected = "Something";
         String actual = "Hello";
@@ -24,6 +27,7 @@ public class JunitPracticeTest {
     }
 
     @Test
+    @DisplayName("Assert True 메소드 테스트")
     public void assertTrueTest() {
         Assertions.assertTrue(true);
 
@@ -33,6 +37,7 @@ public class JunitPracticeTest {
     }
 
     @Test
+    @DisplayName("Assert False 메소드 테스트")
     public void assertFalseTest() {
         Assertions.assertFalse(false);
 
@@ -42,6 +47,7 @@ public class JunitPracticeTest {
     }
 
     @Test
+    @DisplayName("Assert Throw 메소드 테스트")
     public void assertThrowTest() {
         Assertions.assertThrows(RuntimeException.class, () -> {
             throw new RuntimeException();
@@ -49,18 +55,21 @@ public class JunitPracticeTest {
     }
 
     @Test
+    @DisplayName("Assert Not Null 메소드 테스트")
     public void assertNotNullTest() {
         String value = "Hello";
         Assertions.assertNotNull(value);
     }
 
     @Test
+    @DisplayName("Assert Null 메소드 테스트")
     public void assertNull() {
         String value = null;
         Assertions.assertNull(value);
     }
 
     @Test
+    @DisplayName("Assert Iterable 메소드 테스트")
     public void assertIterableEquals() {
         List<Integer> list1 = List.of(1, 2);
         List<Integer> list2 = List.of(1, 2);
@@ -69,6 +78,7 @@ public class JunitPracticeTest {
     }
 
     @Test
+    @DisplayName("Assert All 메소드 테스트")
     public void assetAllTest() {
 
         String expected = "Something";
