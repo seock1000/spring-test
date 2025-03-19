@@ -5,17 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.TypeAlias;
 
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "student_pass")
+@Table(name = "student_fail")
 @Entity
-public class StudentPass {
+public class StudentFail {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "student_pass_id")
+    @Column(name = "student_fail_id")
     private Long id;
 
     @Column(name = "exam")
@@ -25,6 +24,6 @@ public class StudentPass {
     private String studentName;
 
     @Column(name = "avg_score")
-    private String avgScore;
+    private Double avgScore;
 
 }
