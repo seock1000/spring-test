@@ -6,6 +6,7 @@ import com.zuzu.dayonetest.controller.response.ExamPassStudentResponse;
 import com.zuzu.dayonetest.model.StudentFail;
 import com.zuzu.dayonetest.model.StudentPass;
 import com.zuzu.dayonetest.model.StudentScore;
+import com.zuzu.dayonetest.model.StudentScoreTestDataBuilder;
 import com.zuzu.dayonetest.repository.StudentFailRepository;
 import com.zuzu.dayonetest.repository.StudentPassRepository;
 import com.zuzu.dayonetest.repository.StudentScoreRepository;
@@ -70,21 +71,20 @@ public class StudentScoreMockTest {
         Integer givenEnglishScore = 100;
         Integer givenMathScore = 60;
 
-        StudentScore expectedStudentScore = StudentScore.builder()
-                .studentName(givenStudentName)
-                .exam(givenExam)
-                .korScore(givenKorScore)
-                .englishScore(givenEnglishScore)
-                .mathScore(givenMathScore)
-                .build();
+        StudentScore expectedStudentScore = StudentScoreTestDataBuilder.passed().build();
+
+//          오버라이딩 가능
+//        StudentScore expectedStudentScore2 = StudentScoreTestDataBuilder.passed()
+//                .studentName("newName")
+//                .build();
 
         StudentPass expectedStudentPass = StudentPass.builder()
-                .studentName(givenStudentName)
-                .exam(givenExam)
+                .studentName(expectedStudentScore.getStudentName())
+                .exam(expectedStudentScore.getExam())
                 .avgScore(new MyCalculator(0.0)
-                        .add(givenKorScore.doubleValue())
-                        .add(givenEnglishScore.doubleValue())
-                        .add(givenMathScore.doubleValue())
+                        .add(expectedStudentScore.getKorScore().doubleValue())
+                        .add(expectedStudentScore.getEnglishScore().doubleValue())
+                        .add(expectedStudentScore.getMathScore().doubleValue())
                         .divide(3.0)
                         .getResult())
                 .build();
@@ -95,11 +95,11 @@ public class StudentScoreMockTest {
 
         //when
         studentScoreService.saveScore(
-                givenStudentName,
-                givenExam,
-                givenKorScore,
-                givenEnglishScore,
-                givenMathScore
+                expectedStudentScore.getStudentName(),
+                expectedStudentScore.getExam(),
+                expectedStudentScore.getKorScore(),
+                expectedStudentScore.getEnglishScore(),
+                expectedStudentScore.getMathScore()
         );
 
         //then
