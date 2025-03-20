@@ -1,6 +1,5 @@
 package com.zuzu.dayonetest.service;
 
-import com.zuzu.dayonetest.MyCalculator;
 import com.zuzu.dayonetest.controller.response.ExamFailStudentResponse;
 import com.zuzu.dayonetest.controller.response.ExamPassStudentResponse;
 import com.zuzu.dayonetest.model.*;
@@ -13,7 +12,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
-import org.springframework.util.Assert;
 
 import java.util.List;
 
