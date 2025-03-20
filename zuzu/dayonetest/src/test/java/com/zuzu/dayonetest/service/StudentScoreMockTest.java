@@ -3,10 +3,7 @@ package com.zuzu.dayonetest.service;
 import com.zuzu.dayonetest.MyCalculator;
 import com.zuzu.dayonetest.controller.response.ExamFailStudentResponse;
 import com.zuzu.dayonetest.controller.response.ExamPassStudentResponse;
-import com.zuzu.dayonetest.model.StudentFail;
-import com.zuzu.dayonetest.model.StudentPass;
-import com.zuzu.dayonetest.model.StudentScore;
-import com.zuzu.dayonetest.model.StudentScoreTestDataBuilder;
+import com.zuzu.dayonetest.model.*;
 import com.zuzu.dayonetest.repository.StudentFailRepository;
 import com.zuzu.dayonetest.repository.StudentPassRepository;
 import com.zuzu.dayonetest.repository.StudentScoreRepository;
@@ -71,23 +68,15 @@ public class StudentScoreMockTest {
         Integer givenEnglishScore = 100;
         Integer givenMathScore = 60;
 
-        StudentScore expectedStudentScore = StudentScoreTestDataBuilder.passed().build();
+        StudentScore expectedStudentScore = StudentScoreFixture.passed();
 
-//          오버라이딩 가능
+//        오버라이딩 가능
+//          오버라이딩의 문제점 -> pass가 아닌 상태를 작성할 수 있음
 //        StudentScore expectedStudentScore2 = StudentScoreTestDataBuilder.passed()
 //                .studentName("newName")
 //                .build();
 
-        StudentPass expectedStudentPass = StudentPass.builder()
-                .studentName(expectedStudentScore.getStudentName())
-                .exam(expectedStudentScore.getExam())
-                .avgScore(new MyCalculator(0.0)
-                        .add(expectedStudentScore.getKorScore().doubleValue())
-                        .add(expectedStudentScore.getEnglishScore().doubleValue())
-                        .add(expectedStudentScore.getMathScore().doubleValue())
-                        .divide(3.0)
-                        .getResult())
-                .build();
+        StudentPass expectedStudentPass = StudentPassFixture.create(expectedStudentScore);
 
         // 인자로 넘어가는 값을 capture 하는 mockito 제공 클래스
         ArgumentCaptor<StudentScore> studentScoreArgumentCaptor = ArgumentCaptor.forClass(StudentScore.class);
@@ -129,30 +118,9 @@ public class StudentScoreMockTest {
     @DisplayName("성적 저장 로직 검증 / 60점 미만인 경우 Fail 저장")
     public void saveScoreMockTest2() {
         //given
-        String givenStudentName = "석천";
-        String givenExam = "testExam";
-        Integer givenKorScore = 40;
-        Integer givenEnglishScore = 20;
-        Integer givenMathScore = 60;
+        StudentScore expectedStudentScore = StudentScoreFixture.failed();
 
-        StudentScore expectedStudentScore = StudentScore.builder()
-                .studentName(givenStudentName)
-                .exam(givenExam)
-                .korScore(givenKorScore)
-                .englishScore(givenEnglishScore)
-                .mathScore(givenMathScore)
-                .build();
-
-        StudentFail expectedStudentFail = StudentFail.builder()
-                .studentName(givenStudentName)
-                .exam(givenExam)
-                .avgScore(new MyCalculator(0.0)
-                        .add(givenKorScore.doubleValue())
-                        .add(givenEnglishScore.doubleValue())
-                        .add(givenMathScore.doubleValue())
-                        .divide(3.0)
-                        .getResult())
-                .build();
+        StudentFail expectedStudentFail = StudentFailFixture.create(expectedStudentScore);
 
         // 인자로 넘어가는 값을 capture 하는 mockito 제공 클래스
         ArgumentCaptor<StudentScore> studentScoreArgumentCaptor = ArgumentCaptor.forClass(StudentScore.class);
@@ -160,11 +128,11 @@ public class StudentScoreMockTest {
 
         //when
         studentScoreService.saveScore(
-                givenStudentName,
-                givenExam,
-                givenKorScore,
-                givenEnglishScore,
-                givenMathScore
+                expectedStudentScore.getStudentName(),
+                expectedStudentScore.getExam(),
+                expectedStudentScore.getKorScore(),
+                expectedStudentScore.getEnglishScore(),
+                expectedStudentScore.getMathScore()
         );
 
         //then
@@ -192,9 +160,10 @@ public class StudentScoreMockTest {
     @DisplayName("합격자 명단 가져오기 검증")
     public void getPassStudentsListTest() {
         // given
-        StudentPass expectedStudent1 = StudentPass.builder().id(1L).studentName("석천").exam("testExam").avgScore(70.0).build();
-        StudentPass expectedStudent2 = StudentPass.builder().id(2L).studentName("석천2").exam("testExam").avgScore(70.0).build();
-        StudentPass notExpectedStudent = StudentPass.builder().id(3L).studentName("not").exam("notTestExam").avgScore(70.0).build();
+        String givenExam = "testExam";
+        StudentPass expectedStudent1 = StudentPassFixture.create("석천1", givenExam);
+        StudentPass expectedStudent2 = StudentPassFixture.create("석천2", givenExam);
+        StudentPass notExpectedStudent = StudentPassFixture.create("not", "notgiven");
 
         // findAll 호출 시 지정한 List 호출
         Mockito.when(studentPassRepository.findAll()).thenReturn(List.of(
@@ -202,8 +171,6 @@ public class StudentScoreMockTest {
                 expectedStudent2,
                 notExpectedStudent
         ));
-
-        String givenExam = "testExam";
 
         //when
         var expectedResponses = List.of(expectedStudent1, expectedStudent2)
@@ -221,9 +188,9 @@ public class StudentScoreMockTest {
         // given
         String givenExam = "testExam";
 
-        StudentFail expectedStudent1 = StudentFail.builder().id(1L).studentName("석천").exam(givenExam).avgScore(50.0).build();
-        StudentFail expectedStudent2 = StudentFail.builder().id(2L).studentName("석천2").exam(givenExam).avgScore(40.0).build();
-        StudentFail notExpectedStudent = StudentFail.builder().id(3L).studentName("not").exam("not").avgScore(30.0).build();
+        StudentFail expectedStudent1 = StudentFailFixture.create("석천1", givenExam);
+        StudentFail expectedStudent2 = StudentFailFixture.create("석천2", givenExam);
+        StudentFail notExpectedStudent = StudentFailFixture.create("not", "notgiven");
 
         // findAll 호출 시 지정한 List 호출
         Mockito.when(studentFailRepository.findAll()).thenReturn(List.of(
