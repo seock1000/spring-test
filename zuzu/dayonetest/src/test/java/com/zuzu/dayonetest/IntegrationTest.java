@@ -1,5 +1,6 @@
 package com.zuzu.dayonetest;
 
+import com.redis.testcontainers.RedisContainer;
 import org.junit.Ignore;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
@@ -26,8 +27,11 @@ public class IntegrationTest {
 
     static DockerComposeContainer rdbms;
 
+    static RedisContainer redis;
+
     // 잘 실행하는지 로그 메세지의 표출 여부로 테스트
     static {
+        // 컨테이너 설정 및 실행
         rdbms = new DockerComposeContainer(new File("infra/test/docker-compose.yaml"))
                 .withExposedService(
                         "local-db",
@@ -43,6 +47,9 @@ public class IntegrationTest {
                 );
 
         rdbms.start();
+
+        redis = new RedisContainer(RedisContainer.DEFAULT_IMAGE_NAME.withTag("6"));
+        redis.start();
     }
 
     static class IntegrationInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
@@ -55,8 +62,13 @@ public class IntegrationTest {
             var rdbmsHost = rdbms.getServiceHost("local-db", 3306);
             var rdbmsPort = rdbms.getServicePort("local-db", 3306);
 
+            var redisHost = redis.getHost();
+            var redisPort = redis.getFirstMappedPort();
+
             // 동적으로 property 적용
             properties.put("spring.datasource.url", "jdbc:mysql://" + rdbmsHost + ":" + rdbmsPort + "/score");
+            properties.put("spring.datasource.redis.host", redisHost);
+            properties.put("spring.datasource.redis.port", redisPort.toString());
 
             TestPropertyValues.of(properties)
                     .applyTo(applicationContext);
